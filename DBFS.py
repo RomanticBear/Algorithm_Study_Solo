@@ -371,114 +371,6 @@ for i in range(N):
 
 '''
 
-# 13023 ABCDE
-
-'''
-# DFS
-def dfs(nod,lst):
-    global ans
-
-    # print(lst)
-
-    if len(lst)==5:    
-        ans=True
-        return
-    
-    for nex_nod in graph[nod]:
-        if visited[nex_nod] == False:
-            visited[nex_nod]=True
-            dfs(nex_nod,lst+[nex_nod])
-            visited[nex_nod]=False
-
-
-# Main
-N,M=map(int,input().split())
-graph=[[] for _ in range(N+1)]
-# visited=[False for _ in range(N+1)]
-ans=False
-
-for _ in range(M):
-    nod1,nod2=map(int,input().split())
-    graph[nod1].append(nod2)
-
-# print(graph)
-
-for nod in range(N+1):
-
-    dfs(nod,[nod])
-
-
-if ans:
-    print(1)
-else:
-    print(0)
-
-'''
-
-
-# 사이클 형성 안하는 원소 개수 세기
-# BFS + DFS 느낌 ?
-# MST ? 
-
-
-# 두번째 try
-# 서로소 집합 알고리즘
-
-# find 함수
-def find_parent(parent, x):
-    # 루트 노드가 아니라면, 루트 노드를 찾을 때까지 재귀적으로 호출 -> 루트 노드는 자신의 번호를 초기화 과정에서 자신의 번호를 가지고 있음
-    if parent[x]!=x:
-        return find_parent(parent, parent[x])
-    return x
-
-# union 함수
-def union_parent(parent, a, b):
-    a_root=find_parent(parent, a) # a 루트 노드 탐색
-    b_root=find_parent(parent, b) # b 루트 노드 탐색
-
-    
-    # 이 부분이 가장 헷갈렸음 #####
-    # 연결된 A,B의 합이 아니라 A와 B의 루트노드에 관해 합해줌
-		# union2,4 단계 그림 참고
-    if a_root<b_root:
-        parent[b_root]=a_root # B'가 A'를 향하게 함 (B'->A')
-    else:
-        parent[a_root]=b_root
-
-
-# v:루트노드, e:간선개수
-v,e=map(int,input().split())
-parent=[0]*(v+1) # 부모 테이블 초기화
-
-# 부모 테이블에서 부모를 자기 자신으로 초기화 -> V개의 트리 형태
-for i in range(1,v+1):
-    parent[i]=i
-
-# union 연산 모두 수행
-for i in range(e):
-    a,b=map(int,input().split())
-    union_parent(parent,a,b)
-
-'''
-# 각 원소가 속한 집합 출력 -> 루트노드 출력 -> 루트 노드가 같다면 같은 집합, 다르다면 다른 집합
-print('각 원소가 속한 집합(루트노드): ', end='')
-for i in range(1,v+1):
-    print(find_parent(parent,i), end=' ')
-
-
-# 각각의 부모 노드 출력 -> parent 테이블 = 부모 노드 정보 테이블
-print('부모 테이블: ', end='')
-for i in range(1, v+1):
-    print(parent[i],end=' ')
-'''
-
-for i in range(len(parent)):
-    if parent.count(i)>=5:
-        ans=1
-        break
-
-print(ans)
-
 
 # 7562 나이트의 이동
 
@@ -649,5 +541,224 @@ for _ in range(TC):
 '''
 
 
-# 한붓그리기네 ,, 
-#  https://sonsh0824.tistory.com/entry/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EA%B3%B5%EB%B6%804-%ED%95%9C%EB%B6%93%EA%B7%B8%EB%A6%AC%EA%B8%B0Eulerian-circuit
+
+
+
+
+# 13023 ABCDE
+
+'''
+# DFS
+def dfs(nod,lst):
+    global ans
+
+    # print(lst)
+
+    if len(lst)==5:    
+        ans=True
+        return
+    
+    for nex_nod in graph[nod]:
+        if visited[nex_nod] == False:
+            visited[nex_nod]=True
+            dfs(nex_nod,lst+[nex_nod])
+            visited[nex_nod]=False
+
+
+# Main
+N,M=map(int,input().split())
+graph=[[] for _ in range(N+1)]
+# visited=[False for _ in range(N+1)]
+ans=False
+
+for _ in range(M):
+    nod1,nod2=map(int,input().split())
+    graph[nod1].append(nod2)
+
+# print(graph)
+
+for nod in range(N+1):
+
+    dfs(nod,[nod])
+
+
+if ans:
+    print(1)
+else:
+    print(0)
+
+'''
+
+
+# 사이클 형성 안하는 원소 개수 세기
+# BFS + DFS 느낌 ?
+# MST ? 
+
+
+# 두번째 try
+# 서로소 집합 알고리즘
+
+
+'''
+# find 함수
+def find_parent(parent, x):
+    # 루트 노드가 아니라면, 루트 노드를 찾을 때까지 재귀적으로 호출 -> 루트 노드는 자신의 번호를 초기화 과정에서 자신의 번호를 가지고 있음
+    if parent[x]!=x:
+        return find_parent(parent, parent[x])
+    return x
+
+# union 함수
+def union_parent(parent, a, b):
+    a_root=find_parent(parent, a) # a 루트 노드 탐색
+    b_root=find_parent(parent, b) # b 루트 노드 탐색
+
+    
+    # 이 부분이 가장 헷갈렸음 #####
+    # 연결된 A,B의 합이 아니라 A와 B의 루트노드에 관해 합해줌
+		# union2,4 단계 그림 참고
+    if a_root<b_root:
+        parent[b_root]=a_root # B'가 A'를 향하게 함 (B'->A')
+    else:
+        parent[a_root]=b_root
+
+
+# v:루트노드, e:간선개수
+v,e=map(int,input().split())
+parent=[0]*(v+1) # 부모 테이블 초기화
+
+# 부모 테이블에서 부모를 자기 자신으로 초기화 -> V개의 트리 형태
+for i in range(1,v+1):
+    parent[i]=i
+
+# union 연산 모두 수행
+for i in range(e):
+    a,b=map(int,input().split())
+    union_parent(parent,a,b)
+
+
+for i in range(len(parent)):
+    if parent.count(i)>=5:
+        ans=1
+        break
+
+print(ans)
+
+
+# 각 원소가 속한 집합 출력 -> 루트노드 출력 -> 루트 노드가 같다면 같은 집합, 다르다면 다른 집합
+print('각 원소가 속한 집합(루트노드): ', end='')
+for i in range(1,v+1):
+    print(find_parent(parent,i), end=' ')
+
+
+# 각각의 부모 노드 출력 -> parent 테이블 = 부모 노드 정보 테이블
+print('부모 테이블: ', end='')
+for i in range(1, v+1):
+    print(parent[i],end=' ')
+'''
+
+
+
+
+
+# 13023 BOJ ABCDE
+
+# 문제 설명 더러움 
+# 결론: 한붓그리기 5개 노드 okay면 True 출력하기
+
+'''
+# 1. 그래프 초기화
+
+# DFS
+def dfs(nod,lst):
+    global ans
+
+    if len(lst)==5:    
+        ans=True
+        return
+    
+    for nex_nod in graph[nod]:
+        if visited[nex_nod] == False:
+            visited[nex_nod]=True
+            dfs(nex_nod,lst+[nex_nod])
+            visited[nex_nod]=False
+
+
+# Main
+N,M=map(int,input().split())
+graph=[[] for _ in range(N+1)]
+visited=[False for _ in range(N+1)]
+ans=False
+
+for _ in range(M):
+    nod1,nod2=map(int,input().split())
+
+    # 양방향 간선
+    graph[nod1].append(nod2)
+    graph[nod2].append(nod1)
+
+for nod in range(N+1):
+    visited[nod]=True
+    dfs(nod,[nod])
+    visited[nod]=False
+    
+    # magic code -> 안해주면 시간초과 나는 마술 
+    # 순차적으로 노드를 탐색하면서 True값을 뽑았다면, 이후 노드들에 대해 탐색 x
+    if ans:
+        break
+
+if ans:
+    print(1)
+else:
+    print(0)
+
+
+
+# 2. defaultdic
+
+from collections import defaultdict
+
+# DFS
+def dfs(nod,lst):
+    global ans
+
+    if len(lst)==5:    
+        ans=True
+        return
+    
+    for nex_nod in dic[nod]:
+        if visited[nex_nod] == False:
+            visited[nex_nod]=True
+            dfs(nex_nod,lst+[nex_nod])
+            visited[nex_nod]=False
+
+
+# MAIN
+N,M=map(int,input().split())
+dic=defaultdict(list)
+visited=[False for _ in range(N+1)]
+ans=False
+
+# 그래프 형성
+for _ in range(M):
+    n1,n2=map(int,input().split())
+    dic[n1].append(n2)
+    dic[n2].append(n1)
+
+# 각 지점에서 DFS 수행
+for nod in range(N+1):
+    visited[nod]=True
+    dfs(nod,[nod])
+    visited[nod]=False
+
+    # magic method
+    if ans:
+        break
+
+if ans:
+    print(1)
+else:
+    print(0)
+
+# 1, 2 시간 비슷
+
+'''
