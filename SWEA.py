@@ -7877,3 +7877,44 @@ for tc in range(1,T+1):
     print(f'{tc}',post_cal(postfix_func(sik)))
 
 '''
+
+import random
+
+def monty_hall_simulation(switch, trials = 10000):
+
+    wins = 0
+    
+    for _ in range(trials):
+        # 3개의 문 중 하나를 무작위로 선택합니다 (0, 1, 2)
+        car_position = random.randint(0, 2)
+        player_choice = random.randint(0, 2)
+
+        # 사회자가 열 수 있는 문들을 찾습니다
+        remaining_doors = []
+        for door in range(3):
+            if door != player_choice and door != car_position:
+                remaining_doors.append(door)
+        
+        monty_opens = random.choice(remaining_doors)
+
+        # 플레이어가 문을 바꾼다면
+        if switch:
+            for door in range(3):
+                if door != player_choice and door != monty_opens:
+                    player_choice = door
+                    break
+
+        # 플레이어가 차를 얻는 경우
+        if player_choice == car_position:
+            wins += 1
+
+    # 이길 확률을 반환합니다
+    return wins / trials
+
+# 시뮬레이션 실행
+no_switching = monty_hall_simulation(switch=False)
+switching = monty_hall_simulation(switch=True)
+
+
+print(f"바꾸지 않는 경우 이길 확률: {no_switching:.2%}")
+print(f"바꾸는 경우 이길 확률: {switching:.2%}")
