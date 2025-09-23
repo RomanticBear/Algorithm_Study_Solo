@@ -206,3 +206,95 @@ ans=ch_ans+str(num_ans)
 print(ans)
 
 '''
+
+
+# BFS, DFS
+
+# 음료수 얼려먹기
+
+'''
+N,M=map(int,input().split())
+arr=[] # 얼음판 
+cnt=0 # 정답 
+
+# 얼을판 
+for _ in range(N):
+    line=list(map(int,list(input())))
+    arr.append(line)
+
+
+# 방문체크
+visited=[[False] * M for _ in range(N)]
+
+
+# dfs 함수
+def dfs(i,j,visited):
+    visited[i][j]=True
+    dij=[(1,0),(0,1),(-1,0),(0,-1)] # 방향 함수
+    
+    for di,dj in dij:
+        ni=i+di
+        nj=j+dj
+
+        if 0<=ni<N and 0<=nj<M and arr[ni][nj]==0 and visited[ni][nj]!=True:
+            dfs(ni,nj,visited)
+
+    return 
+
+
+# main
+for i in range(N):
+    for j in range(M):
+        if arr[i][j]==0 and visited[i][j]!=True:
+            visited[i][j]=True # 방문 체크
+            dfs(i,j,visited)
+            cnt+=1
+
+
+print(cnt)
+            
+            
+
+
+
+from collections import deque
+
+
+# 미로 탈출
+
+N,M=map(int,input().split())
+arr=[]
+
+# 미로 입력
+for _ in range(N):
+    line=list(map(int,input()))
+    arr.append(line)
+
+
+# 방문 체크 배열
+visited=[[False]*M for _ in range(N)]
+dij=[(-1,0),(1,0),(0,-1),(0,1)]
+
+# bfs 함수 
+def bfs(i,j):
+    q=deque()
+    visited[i][j]=True # 방문 체크
+    q.append((i,j))
+
+    while q:
+        i,j=q.popleft() # 가장 처음 들어간 노드 빼기
+        for di,dj in dij:
+            ni,nj=i+di,j+dj
+            if 0<=ni<N and 0<=nj<M and arr[ni][nj]==1 and visited[ni][nj]!=True:
+                arr[ni][nj]+=arr[i][j]  # 거리 누적 
+                q.append((ni,nj))  # 큐에 담기 
+            
+
+
+# bfs 탐색
+bfs(0,0)
+
+print(arr[N-1][M-1])
+
+
+'''
