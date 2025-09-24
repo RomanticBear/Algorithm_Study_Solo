@@ -298,3 +298,74 @@ print(arr[N-1][M-1])
 
 
 '''
+
+# 정렬
+
+# 1. 선택정렬
+
+'''
+arr=[7,5,9,0,3,1,6,2,8,]
+
+for i in range(len(arr)):
+    min_num=arr[i]
+    idx=i # i 이후 가장 작은 수의 인덱스
+    for j in range(i+1,len(arr)):
+        if arr[j]<min_num:
+            min_num=arr[j]
+            idx=j
+    
+    arr[i],arr[idx]=arr[idx],arr[i]
+
+print(arr)
+
+'''
+
+# 삽입정렬
+
+# 작은 순으로 정렬
+'''
+arr=[7,5,9,0,3,1,6,2,4,8]
+
+
+for i in range(1,len(arr)):
+    for j in range(i,0,-1):
+        if arr[j]<arr[j-1]:
+            arr[j],arr[j-1]=arr[j-1],arr[j]
+        else:
+            break
+
+print(arr)
+
+'''
+
+# 큰 순으로 정렬
+
+'''
+arr=[7,5,9,0,3,1,6,2,4,8]
+
+for i in range(1,len(arr)):
+    for j in range(i,0,-1):
+        if arr[j]>arr[j-1]:
+            arr[j],arr[j-1]=arr[j-1],arr[j]
+        else:
+            break
+
+print(arr)
+
+'''
+
+#  왼쪽이 고정되어 있다고 생각하고, 오름차순 정렬
+
+'''
+arr=[7,5,9,0,3,1,6,2,4,8]
+
+for i in range(len(arr)-1,-1,-1):
+    for j in range(i,len(arr)-1):
+        if arr[j]>arr[j+1]:
+            arr[j],arr[j+1]=arr[j+1],arr[j]
+        else:
+            break
+
+print(arr)
+
+'''
