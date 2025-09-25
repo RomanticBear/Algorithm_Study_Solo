@@ -369,3 +369,65 @@ for i in range(len(arr)-1,-1,-1):
 print(arr)
 
 '''
+
+
+'''
+
+1. 순차적으로 피봇(pivot)을 설정한다.
+
+2. 왼쪽에서는 피봇보다 큰수, 오른쪽에서부터 피봇보다 작은 수를 선택한다.
+
+-> 선택되면 바꾼다.
+
+-> 왼쪽을 가르키는 인덱스가, 오른쪽을 가르키는 인덱스와 엇갈리면, 피봇과 왼쪽을 가르키는 인덱스를 바꾼다.
+
+
+3. 분할된 묶음을 재귀로 같은 과정을 반복한다.
+
+
+
+# 재귀를 어떻게 써야할까 ,,?  dfs로 간다면 종료조건은 어떻게 걸어야하지 ,,?
+
+# 정렬할 배열을 전역 변수로 접근해야겠지 ,,? 
+
+'''
+
+
+# 퀵 소트 정렬 -> 1차 실패 
+
+
+arr=[1,4,2,0,3,5,6,9,7,8]
+flog=False # 스왑여부
+
+pivot_idx=0 # 우선 가장 첫번째 인덱스를 피봇으로 잡음 
+
+for i in range(len(arr)): # 왼쪽 인덱스
+    for j in range(len(arr),-1,-1):  # 오른쪽 인덱스
+        if i>j: # 좌, 우 인덱스가 엇갈린다면
+            arr[pivot_idx],arr[i]=arr[i],arr[pivot_idx] # 피봇과 좌 인덱스 스왑 
+
+
+def dfs(arr):
+    pivot=arr[0]
+    
+    for i in range(len(arr)):
+        for j in range(len(arr),-1,-1):
+            if i>j:
+                arr[pivot_idx],arr[i]=arr[i],arr[pivot_idx]
+                flag=True # 스왑 체크
+                right_arr=arr[0:i]
+                left_arr=arr[len(arr):i:-1]
+                dfs(right_arr)
+                dfs(left_arr)
+                break
+        if flag: # 만약 스왑이 되었다면, 바로 빠져나가고 아니면, 다음으로 이동  
+
+            break
+
+
+# 수정해야함: 현재는 왼쪽이 한칸 갈 때, 오른쪽을 전부 보냄 -> 왼쪽에서 피봇보다 큰 것을 찾고, 오른쪽에서 피봇보다 작은 것을 찾아서 스왑해야함 
+
+
+# arr=[1,2,3,4]
+
+# print(arr[-1,1,-1])
