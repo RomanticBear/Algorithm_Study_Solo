@@ -393,43 +393,77 @@ print(arr)
 '''
 
 
-# 퀵 소트 정렬 -> 1차 실패 
+# 퀵 소트 정렬 -> 2차 실패 
+# for문 접근 -> i가 j랑 스왑하고, 1증가하면서 나머지 작은 수에 대해서 스왑이 불가 / i도 j 처럼 처음부터 접근할시 결국 O(N^2) 형태 -> while 문으로 가는게 맞음
 
+'''
+arr=[7,5,9,0,3,1,6,2,4,8]
 
-arr=[1,4,2,0,3,5,6,9,7,8]
-flog=False # 스왑여부
+def dfs(arr):        
+    pivot_idx=0 # 우선 가장 첫번째 인덱스를 피봇으로 잡음 
 
-pivot_idx=0 # 우선 가장 첫번째 인덱스를 피봇으로 잡음 
+    for i in range(pivot_idx+1, len(arr)): # 왼쪽 인덱스
+        for j in range(len(arr)-1,pivot_idx,-1):  # 오른쪽 인덱스
 
-for i in range(len(arr)): # 왼쪽 인덱스
-    for j in range(len(arr),-1,-1):  # 오른쪽 인덱스
-        if i>j: # 좌, 우 인덱스가 엇갈린다면
-            arr[pivot_idx],arr[i]=arr[i],arr[pivot_idx] # 피봇과 좌 인덱스 스왑 
-
-
-def dfs(arr):
-    pivot=arr[0]
-    
-    for i in range(len(arr)):
-        for j in range(len(arr),-1,-1):
+            if ((arr[pivot_idx]<arr[i]) and (arr[pivot_idx]>arr[j]) and (i<j)):
+                arr[i],arr[j]=arr[j],arr[i] # 피봇과 좌 인덱스 스왑
+                break
+                
             if i>j:
-                arr[pivot_idx],arr[i]=arr[i],arr[pivot_idx]
-                flag=True # 스왑 체크
-                right_arr=arr[0:i]
-                left_arr=arr[len(arr):i:-1]
+                arr[pivot_idx],arr[j]=arr[j],arr[pivot_idx]
+                right_arr=arr[0:j]
+                left_arr=arr[j+1:len(arr)-1]
                 dfs(right_arr)
                 dfs(left_arr)
-                break
-        if flag: # 만약 스왑이 되었다면, 바로 빠져나가고 아니면, 다음으로 이동  
+            
 
+
+dfs(arr)
+
+print(arr)
+
+
+'''
+
+
+
+# while문 도전 퀵 정렬
+
+arr=[7,5,9,0,3,1,6,2,4,8]
+
+
+def quick_sort(arr):
+
+
+    if len(arr)<=1:
+        return arr
+
+    pivot=0
+    l_idx=1
+    r_idx=len(arr)-1
+
+    while True:
+
+        while l_idx <= r_idx and arr[l_idx] < arr[pivot]:
+            l_idx += 1
+        # 오른쪽에서 피벗보다 작은 값 찾기
+        while l_idx <= r_idx and arr[r_idx] > arr[pivot]:
+            r_idx -= 1
+
+        # 교차 해버렸을 때, 탈출 
+        if l_idx > r_idx:
             break
 
+        # 교차 전, 스왑 조건 만족 시
+        arr[r_idx],arr[l_idx]=arr[l_idx],arr[r_idx]
+        l_idx+=1
+        r_idx-=1
 
-# 수정해야함: 현재는 왼쪽이 한칸 갈 때, 오른쪽을 전부 보냄 -> 왼쪽에서 피봇보다 큰 것을 찾고, 오른쪽에서 피봇보다 작은 것을 찾아서 스왑해야함 
+
+    # 교차 후, r_idx와 pivot 스왑 
+    arr[pivot], arr[r_idx]=arr[r_idx],arr[pivot]
+
+    return quick_sort(arr[:r_idx])+[arr[r_idx]]+quick_sort(arr[r_idx+1:])
 
 
-# arr=[1,2,3,4]
-
-# print(arr[-1,1,-1])
-
-#
+print(quick_sort(arr))
