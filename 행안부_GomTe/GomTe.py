@@ -428,7 +428,7 @@ print(arr)
 
 
 # while문 도전 퀵 정렬
-
+'''
 arr=[7,5,9,0,3,1,6,2,4,8]
 
 
@@ -467,3 +467,258 @@ def quick_sort(arr):
 
 
 print(quick_sort(arr))
+
+'''
+
+# 1316 그룹 단어 체커
+
+'''
+def check_word(lst):
+
+    flag=True
+    stack=[]
+
+    for word in lst:
+        if word not in stack:
+            stack.append(word)
+        else:
+            if word != stack[-1]:
+                flag=False
+                break
+    
+    return flag
+
+
+N=int(input())
+cnt=0
+for _ in range(N):
+    lst=list(input())
+    cnt+=check_word(lst)
+
+print(cnt)
+
+
+'''
+
+# 2941 크로아티아 알파벳
+
+
+# dz=, dz 의 경우 count 함수 접근 불가 -> dz 2개로 카운트 됨 
+
+'''
+
+cro_lst=['c=','c-','dz=','d-','lj','nj','s=','z=']
+
+str=input()
+
+cnt=0 # cro_lst 단어 개수 
+word_sum=0 # cro_lst 글자 개수 
+
+
+for word in cro_lst:
+
+    if word=='z=':
+        if 'dz=' in str:
+            cnt+=(str.count('z=')-str.count('dz='))
+            word_sum+=(str.count('z=')-str.count('dz='))*len(word)
+            continue  # 'dz='이 없다면 아래로 처리     
+
+    cnt+=str.count(word)
+    word_sum+=len(word)*str.count(word)
+
+left_word=len(str)-word_sum
+
+
+print(cnt+left_word)
+
+
+'''
+
+# 2960 에라토스테네스의 체
+
+'''
+N,K=map(int,input().split())
+
+lst=[i for i in range(2,N+1)]
+
+flag=False # 이중 for문 탈출 
+ans=0
+check_lst=[]
+
+for i in range(len(lst)):
+    if lst[i] not in check_lst and K!=0:
+        check_lst.append(lst[i])
+        K-=1
+
+        # print('#',lst[i],check_lst,K)
+        if K==0:
+            ans=lst[i]
+            break
+
+        for j in range(i+1,len(lst)):
+            if lst[j]%lst[i]==0:
+                if lst[j] not in check_lst:
+                    check_lst.append(lst[j])
+                    K-=1
+                if K==0:
+                    ans=lst[j]
+                    flag=True
+                    break
+            
+            # print(lst[i],lst[j],check_lst,K)
+
+    if flag:
+        break
+    
+    # print(lst[i],lst,K)
+
+print(ans)
+
+'''
+
+# 2167 2차원 배열의 합 -> 시간 초과
+
+
+'''
+import sys
+input = sys.stdin.readline
+
+def sq_sum(lst,i,j,x,y):
+    
+    sq_sum=0
+    r_len=x-i
+    c_len=y-j
+
+    for row in range(i,i+r_len+1):
+        for col in range(j,j+c_len+1):           
+            sq_sum+=lst[row][col]
+    return sq_sum
+
+
+lst=[]
+N,M=map(int,input().split())
+
+for _ in range(N):
+    lst.append(list(map(int,input().split())))
+
+K=int(input())
+ans=0
+for _ in range(K):
+    i,j,x,y=map(int,input().split())
+    print(sq_sum(lst,i-1,j-1,x-1,y-1))
+
+
+'''
+
+# 1543 문서 검색
+
+'''
+
+str=input()
+sub_str=input()
+
+cur_idx=0
+cnt=0
+
+while True:
+    if cur_idx+len(sub_str)>len(str):
+        break
+
+    # 여부 확인
+    
+    cur_str=str[cur_idx:cur_idx+len(sub_str)]
+
+    if cur_str==sub_str:
+        cnt+=1
+        cur_idx+=len(sub_str)
+
+    else:
+        cur_idx+=1
+
+print(cnt)
+
+'''
+
+
+# 1459 걷기
+
+# 좌표나 시간에 따른 기준으로 분기하기에 복잡 
+'''
+X,Y,W,S=map(int,input().split()) # W: 직선 시간 / S: 대각선 시간
+ans=0
+
+if W>=S*2:
+    ans=(X+Y)*S
+else:
+    L_D,S_D=max(X,Y),min(X,Y)
+
+    if (X+Y)%2==0:
+        # CASE1: 대각선 이동 
+        CASE1=L_D*W
+
+        # CASE2: 대각선 + 직선 이동  
+        CASE2=S_D*W+(L_D-S_D)*S
+        ans=min(CASE1,CASE2)
+
+    else:
+        pass
+print(ans)
+
+'''
+
+# 경로에 따라 분기하자. 
+
+# 1. 직선으로만 조진다.
+
+# 2. 대각선으로만 조진다.
+# 2-1. X+Y가 짝수라면 대각선으로만 조진다.
+# 2-2. X+Y가 홀수라면 한번 직선으로 가고, 대각선으로 조진다. (최대한 대각선으로 조지는 방법)
+
+# 앞의 방법에서 고려하지 못한 문제
+# 3. 대각선으로 초기 이동하되, 지나치지는 말고, 나머지는 직선으로 가자.
+# 왜냐하면, 대각선으로만 조지는 케이스는 다른 경우의 수로 계산함
+
+'''
+X,Y,S,W=map(int,input().split()) # S: 직선 시간 / W: 대각선 시간
+
+DIST1=(X+Y)*S
+
+if (X+Y)%2==0:
+    DIST2=max(X,Y)*W
+else:
+    DIST2=(max(X,Y)-1)*W+S
+
+DIST3=min(X,Y)*W+(abs(X-Y)*S)
+
+print(min(DIST1,DIST2,DIST3))
+
+'''
+
+
+# 15649 N과 M(1)
+
+# 실패 -> 중복을 형성하지 않고, 뒤로 조합만 구성하는 형태 / 오름차순만 가능하고 (2,1), (3,1) 와 같은 형태 불가 / 백트랙킹 x 
+
+"""
+N,M=map(int,input().split())
+
+lst=[i for i in range(1,N+1)]
+cur_idx=0
+
+def back(cur_idx,sub_lst):
+
+    if len(sub_lst)==M:
+        print(*sub_lst)
+        return 
+
+    else:
+        if cur_idx>=len(lst):
+            return
+        else:
+            back(cur_idx+1,sub_lst+[lst[cur_idx]])
+            back(cur_idx+1,sub_lst+[])
+
+
+back(0,[])
+
+"""
