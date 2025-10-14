@@ -749,3 +749,40 @@ for seq in lst:
     print(*seq)
 
 '''
+
+
+# 15650 N과 M(2)
+
+# 방법 1
+'''
+N, M=map(int,input().split())
+
+def dfs(idx,sub_lst):
+    if len(sub_lst)==M:
+        print(*sub_lst)
+        return
+
+    for num in range(idx,N+1):
+        dfs(num+1,sub_lst+[num])
+
+dfs(1,[])
+
+'''
+
+# 방법 2
+'''
+N, M=map(int,input().split())
+
+def dfs(num,sub_lst):
+    if num>N:    
+        if len(sub_lst)==M:
+            print(*sub_lst)
+        
+        return 
+    
+    dfs(num+1,sub_lst+[num])
+    dfs(num+1,sub_lst)
+
+dfs(1,[])
+
+'''
