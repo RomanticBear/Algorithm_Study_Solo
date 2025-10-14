@@ -766,8 +766,8 @@ def dfs(idx,sub_lst):
         dfs(num+1,sub_lst+[num])
 
 dfs(1,[])
-
 '''
+
 
 # 방법 2
 '''
@@ -786,3 +786,154 @@ def dfs(num,sub_lst):
 dfs(1,[])
 
 '''
+
+# 15651 N과 M (4)
+'''
+N,M=map(int,input().split())
+
+def dfs(idx,sub_lst):
+    
+    if len(sub_lst)==M:
+        print(*sub_lst)
+        return
+
+    for num in range(idx,N+1):
+        dfs(num,sub_lst+[num])
+
+dfs(1,[])
+
+'''
+
+
+# 15655 N과 M (6)
+
+'''
+N,M=map(int,input().split())
+lst=sorted(list(map(int,input().split())))
+v=[True]*(N+1)
+
+
+def dfs(sub_lst):
+
+    if len(sub_lst)==M:
+        print(*sub_lst)
+        return
+    
+    for num in range(len(lst)):
+        if v[num]:
+            v[num]=False
+            dfs(sub_lst+[lst[num]])
+            v[num]=True
+
+dfs([])
+
+'''
+
+# 15655 N과 M (6)
+'''
+N,M=map(int,input().split())
+lst=sorted(list(map(int,input().split())))
+
+def dfs(idx,sub_lst):
+
+    if idx>=N:
+        if len(sub_lst)==M:
+            print(*sub_lst)
+        return 
+        
+    dfs(idx+1,sub_lst+[lst[idx]])
+    dfs(idx+1,sub_lst)
+
+dfs(0,[])
+'''
+
+
+
+
+# 14502 연구소
+
+
+'''
+함수 1. 백트랙킹으로 벽 세우기
+
+함수 2. DFS로 바이러스 확산, 안전영역 개수 카운트
+
+
+[발생한 문제점]
+
+1. arr을 모든 dfs 함수에서 공유하면서, 감염 시 문제 발생 
+>> 벽을 3개 세웠을 때, 깊은 복사로 복제본을 만들고 확산시키자.
+
+2. DFS로 벽을 세울 시, 인접한 4방향으로 접근하면 인접칸에 대해서만 벽이 세워짐 == 떨어진 빈 칸에는 벽을 절대 세울 수 없음.
+>> 해결하지 못함 
+
+
+'''
+
+
+N,M=map(int,input().split())
+
+arr=[] # 연구소
+ans=-1e9 # 최소 안전 영역 
+
+for _ in range(N):
+    arr.append(list(map(int,input().split())))
+
+
+# 함수 1. 벽 세우기
+def wall_dfs(arr,i,j,cnt):
+
+    global ans
+
+    # 벽 다세웠다면,
+    if cnt==0:
+
+        # 복제본 만들기
+        copy=[row[:] for row in arr]
+
+        # 바이러스 확산
+        for i in range(N):
+            for j in range(M):
+                if copy[i][j]==2:
+                    virus_dfs(copy,i,j)
+
+
+        # *** 궁금증 *** virus_dfs 과정을 거친 매트릭스가 반영되나? ㅇㅇ 
+
+        # 안전영역 개수 확인, 최적값 갱신  
+        safe_cnt=sum(row.count(0) for row in copy)
+        ans=max(ans,safe_cnt) 
+        return
+
+
+    # 벽 세우기
+    for di,dj in [(-1,0),(1,0),(0,-1),(0,1)]:
+        ni,nj=i+di,j+dj
+
+        if 0<=ni<N and 0<=nj<M:
+            if arr[ni][nj]==0:
+                arr[ni][nj]=1   # 벽 설치
+                wall_dfs(arr,ni,nj,cnt-1) #  설치 횟수 감소 시키고, dfs 호출
+                arr[ni][nj]=0   # 벽 제거    
+
+
+# 함수 2. 바이러스 확산 
+def virus_dfs(arr,i,j):
+    for di,dj in [(-1,0),(1,0),(0,-1),(0,1)]:
+        ni,nj=i+di,j+dj
+
+        if 0<=ni<N and 0<=nj<M:
+            if arr[ni][nj]==0:
+                arr[ni][nj]=2
+                virus_dfs(arr,ni,nj)
+
+
+# main 문 
+for i in range(N):
+    for j in range(M):
+        if arr[i][j]==0:
+            wall_dfs(0,arr,i,j,3)
+
+
+print(ans)
+
