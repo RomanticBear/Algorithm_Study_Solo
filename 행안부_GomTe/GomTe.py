@@ -958,6 +958,7 @@ print(ans)
 
 # 질문) BFS안에서 생성한 W 리스트는 각각의 DFS안의 개수만큼 별도로 존재하게 되는거일까?
 
+'''
 from collections import deque
 
 def bfs(sub_lst,CNT):
@@ -1031,8 +1032,127 @@ dfs(3,[])
 print(ans)
 
 
+'''
+
+
+# 연구소 제출(2) : dfs -> 재귀로 변경 
+
+"""
+from collections import deque
+
+def bfs(sub_lst,CNT):
+
+    # 벽 세우기
+    for i,j in sub_lst:
+        arr[i][j]=1
+
+    CNT-=3 # 벽 3개 세움
+    q=deque()
+    w=[[0]*M for _ in range(N)] # BFS 방문 체크 
+
+    for i,j in virus:
+        q.append((i,j))
+    
+    while q:
+        i,j=q.popleft()
+
+        for di,dj in [(-1,0),(1,0),(0,1),(0,-1)]:
+            ni,nj=i+di,j+dj
+
+            if 0<=ni<N and 0<=nj<M:
+                if w[ni][nj]==0 and arr[ni][nj]==0:
+                    w[ni][nj]=1 # 방문 체크 
+                    q.append((ni,nj)) # 큐 삽입
+                    CNT-=1
+
+        
+    
+    # 벽 해체
+    for i,j in sub_lst:
+        arr[i][j]=0
+    
+    return CNT
 
 
 
+# main 
+N,M=map(int,input().split())
+arr=[list(map(int,input().split())) for _ in range(N)]
+
+lst=[] # 빈 공간
+virus=[] # 바이러스 공간
+
+for i in range(N):
+    for j in range(M):
+        if arr[i][j]==0:
+            lst.append((i,j))
+        elif arr[i][j]==2:
+            virus.append((i,j))
+
+ans=0 # 정답
+CNT=len(lst)
+v=[[0]*M for _ in range(N)] # DFS 방문 체크 
+
+for i in range(CNT-2):
+    for j in range(i+1,CNT-1):
+        for k in range(j+1,CNT):
+            ans=max(ans,bfs([lst[i],lst[j],lst[k]],CNT))
 
 
+print(ans)
+
+"""
+
+
+# 연구소 제출(3) : W 방문 배열 하나로 공유하기 
+
+from collections import deque
+
+N, M = map(int, input().split())
+arr = [list(map(int, input().split())) for _ in range(N)]
+
+empties, virus = [], []
+for i in range(N):
+    for j in range(M):
+        if arr[i][j] == 0: empties.append((i, j))
+        elif arr[i][j] == 2: virus.append((i, j))
+
+CNT = len(empties)
+vis = [[0]*M for _ in range(N)]
+stamp = 0  # <-- 전역
+
+def bfs(sub_lst):
+    global stamp        # <-- nonlocal 대신 global
+    # 벽 세우기
+    for i, j in sub_lst: arr[i][j] = 1
+
+    cnt = CNT - 3
+    q = deque()
+    stamp += 1          # 라운드 스탬프 증가
+
+    for si, sj in virus:
+        vis[si][sj] = stamp
+        q.append((si, sj))
+
+    while q:
+        i, j = q.popleft()
+        for di, dj in ((1,0),(-1,0),(0,1),(0,-1)):
+            ni, nj = i+di, j+dj
+            if 0 <= ni < N and 0 <= nj < M:
+                if arr[ni][nj] == 0 and vis[ni][nj] != stamp:
+                    vis[ni][nj] = stamp
+                    q.append((ni, nj))
+                    cnt -= 1      # 감염된 빈칸만 줄이기
+
+    # 벽 해체
+    for i, j in sub_lst: arr[i][j] = 0
+    return cnt
+
+ans = 0
+L = len(empties)
+for a in range(L-2):
+    for b in range(a+1, L-1):
+        for c in range(b+1, L):
+            ans = max(ans, bfs([empties[a], empties[b], empties[c]]))
+
+print(ans)
