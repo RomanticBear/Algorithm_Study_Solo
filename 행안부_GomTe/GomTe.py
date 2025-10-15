@@ -852,6 +852,7 @@ dfs(0,[])
 
 # 14502 연구소 
 
+# 내 풀이 - 실패
 
 '''
 함수 1. 백트랙킹으로 벽 세우기
@@ -870,7 +871,7 @@ dfs(0,[])
 
 '''
 
-
+'''
 N,M=map(int,input().split())
 
 arr=[] # 연구소
@@ -878,7 +879,6 @@ ans=-1e9 # 최소 안전 영역
 
 for _ in range(N):
     arr.append(list(map(int,input().split())))
-
 
 # 함수 1. 벽 세우기
 def wall_dfs(arr,i,j,cnt):
@@ -936,4 +936,103 @@ for i in range(N):
 
 
 print(ans)
+
+'''
+
+
+
+# 2차 
+
+'''
+
+1. 벽 세우기 -> DFS(백트랙킹), 조합 
+>> 벽 세울 수 있는 공간(0)의 (i,j) 좌표를 별도의 1차원 리스트에 저장
+
+2. 바이러스 확산 + 안전 영역 개수 체크 -> 최대값 갱신
+
+'''
+
+
+# TEST 1) dfs의 v 이어 받아서 bfs 방문 체크에 사용하기
+# TEST 2) dfs 말고 재귀 사용해서 벽 세우기 
+
+# 질문) BFS안에서 생성한 W 리스트는 각각의 DFS안의 개수만큼 별도로 존재하게 되는거일까?
+
+from collections import deque
+
+def bfs(sub_lst,CNT):
+
+    # 벽 세우기
+    for i,j in sub_lst:
+        arr[i][j]=1
+
+    CNT-=3 # 벽 3개 세움
+    q=deque()
+    w=[[0]*M for _ in range(N)] # BFS 방문 체크 
+
+    for i,j in virus:
+        q.append((i,j))
+    
+    while q:
+        i,j=q.popleft()
+
+        for di,dj in [(-1,0),(1,0),(0,1),(0,-1)]:
+            ni,nj=i+di,j+dj
+
+            if 0<=ni<N and 0<=nj<M:
+                if w[ni][nj]==0 and arr[ni][nj]==0:
+                    w[ni][nj]=1 # 방문 체크 
+                    q.append((ni,nj)) # 큐 삽입
+                    CNT-=1
+
+        
+    
+    # 벽 해체
+    for i,j in sub_lst:
+        arr[i][j]=0
+    
+    return CNT
+
+
+def dfs(cnt,sub_lst): # cnt: 벽 생성 찬스 / sub_lst: 벽 생성한 공간 좌표
+    
+    global ans
+    
+    if cnt == 0:
+        ans=max(ans,bfs(sub_lst,CNT))
+        return
+
+    for i,j in lst:
+        if v[i][j]==0:
+            v[i][j]=1 # 방문 체크
+            dfs(cnt-1,sub_lst+[(i,j)])
+            v[i][j]=0 # 방문 해제
+
+
+# main 
+N,M=map(int,input().split())
+arr=[list(map(int,input().split())) for _ in range(N)]
+
+lst=[] # 빈 공간
+virus=[] # 바이러스 공간
+
+for i in range(N):
+    for j in range(M):
+        if arr[i][j]==0:
+            lst.append((i,j))
+        elif arr[i][j]==2:
+            virus.append((i,j))
+
+ans=0 # 정답
+CNT=len(lst)
+v=[[0]*M for _ in range(N)] # DFS 방문 체크 
+dfs(3,[])
+
+print(ans)
+
+
+
+
+
+
 
