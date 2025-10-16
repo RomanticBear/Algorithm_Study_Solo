@@ -1104,55 +1104,67 @@ print(ans)
 """
 
 
-# 연구소 제출(3) : W 방문 배열 하나로 공유하기 
 
-from collections import deque
+# 14501 퇴사
 
-N, M = map(int, input().split())
-arr = [list(map(int, input().split())) for _ in range(N)]
+'''
+두 가지 상황이 존재한다.
 
-empties, virus = [], []
-for i in range(N):
-    for j in range(M):
-        if arr[i][j] == 0: empties.append((i, j))
-        elif arr[i][j] == 2: virus.append((i, j))
+1. 선택 가능
 
-CNT = len(empties)
-vis = [[0]*M for _ in range(N)]
-stamp = 0  # <-- 전역
+- 1-1. 업무를 선택한다.
 
-def bfs(sub_lst):
-    global stamp        # <-- nonlocal 대신 global
-    # 벽 세우기
-    for i, j in sub_lst: arr[i][j] = 1
+- 1-2. 업무를 패스한다. (선택 안하고 다음 업무를 받았을 때, 더 이득일 수 있으니깐)
 
-    cnt = CNT - 3
-    q = deque()
-    stamp += 1          # 라운드 스탬프 증가
 
-    for si, sj in virus:
-        vis[si][sj] = stamp
-        q.append((si, sj))
+                                                                                                                             
+2. 선택 불가 (과제 처리 중)
 
-    while q:
-        i, j = q.popleft()
-        for di, dj in ((1,0),(-1,0),(0,1),(0,-1)):
-            ni, nj = i+di, j+dj
-            if 0 <= ni < N and 0 <= nj < M:
-                if arr[ni][nj] == 0 and vis[ni][nj] != stamp:
-                    vis[ni][nj] = stamp
-                    q.append((ni, nj))
-                    cnt -= 1      # 감염된 빈칸만 줄이기
+- 과제 남은 시간 하루 차감하고 넘어감 
 
-    # 벽 해체
-    for i, j in sub_lst: arr[i][j] = 0
-    return cnt
+- 차감 했을 때, 남은 시간이 0이 되었고, 기간 내라면 해당 과제의 보수를 취함 
 
-ans = 0
-L = len(empties)
-for a in range(L-2):
-    for b in range(a+1, L-1):
-        for c in range(b+1, L):
-            ans = max(ans, bfs([empties[a], empties[b], empties[c]]))
 
+'''
+
+
+# day: 현재 날짜 / flag: 과제 참여 가능 여부 / cnt: 남은 시간 / money: 보수
+def dfs(day,flag,cnt,money,total):
+    
+    global ans 
+    
+    if cnt==0:
+        total+=money
+        flag=True
+        cnt=0
+        money=0
+        
+
+    if day>=len(lst): # 퇴사날 이후 
+        ans=max(ans,total)
+        return 
+
+    if flag:
+        flag=False
+        cnt=lst[day][0]-1
+        money=lst[day][1]
+        dfs(day+1,flag,cnt,money,total)
+        flag=True
+        cnt=0
+        money=0
+        dfs(day+1,flag,cnt,money,total)
+    
+    else:
+        dfs(day+1,flag,cnt-1,money,total)
+
+
+
+
+N=int(input())
+lst=[list(map(int,input().split())) for _ in range(N)]
+
+flag=True # 과제 참여 가능
+ans=0 # 보수
+
+dfs(0,True,0,0,0)
 print(ans)
