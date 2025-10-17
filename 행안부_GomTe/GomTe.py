@@ -1129,6 +1129,7 @@ print(ans)
 
 
 # day: 현재 날짜 / flag: 과제 참여 가능 여부 / cnt: 남은 시간 / money: 보수
+'''
 def dfs(day,flag,cnt,money,total):
     
     global ans 
@@ -1159,7 +1160,6 @@ def dfs(day,flag,cnt,money,total):
 
 
 
-
 N=int(input())
 lst=[list(map(int,input().split())) for _ in range(N)]
 
@@ -1168,3 +1168,82 @@ ans=0 # 보수
 
 dfs(0,True,0,0,0)
 print(ans)
+
+'''
+
+
+# 15657 N과 M(8)
+'''
+def dfs(idx,sub_lst):
+    if idx>=N:
+        return
+    
+    if len(sub_lst)==M:
+        print(*sub_lst)
+        return
+
+    for i in range(idx,len(lst)):
+        dfs(i,sub_lst+[lst[i]])
+
+N,M=map(int,input().split())
+lst=sorted(list(map(int,input().split())))
+
+dfs(0,[])
+'''
+
+# 14889 스타트와 링크
+
+'''
+함수 1. 팀을 나누는 함수: team_dfs
+함수 2. 팀 구성원의 능력치를 집계하는 함수: power_dfs
+
+'''
+
+def power_dfs():
+    return 
+
+# team_dfs 고민 포인트 
+# 1~4가 있을 때, (1,2)를 선택한다면 (3,4)를 선택한 것과 같은데 조합이 중복해서 발생함.
+
+# 해결방법 
+# (두개의 그룹으로만 나눈다면) 특정 인원이 팀에 들어갔을 때랑 안들어갔을 때로 나눌 수 있음.
+# 따라서, 특정 인원이 들어간 경우만 전부 따지고 나머지 다른 팀을 추출하면 됨.  
+
+def team_dfs(idx,sub_lst):
+
+    global ans
+
+    # 가지치기 : 현재 뽑은 인원으로, 더 진행해봤자 절반에 해당하는 인원을 채울 수 없는 경우
+    if len(sub_lst)+(len(lst)-idx)<len(lst)//2:
+        return
+
+    if len(sub_lst)==len(lst)//2 :
+        if mark not in sub_lst:
+            return
+        
+        else:
+            teamA=[num for num in sub_lst]
+            teamB=[num for num in lst if num not in sub_lst]
+            # print(teamA,'|',teamB)
+
+            P_teamA=power_dfs(teamA)
+            P_teamB=power_dfs(teamB)
+
+            ans=min(ans,abs(P_teamA-P_teamB))
+        return
+    
+    team_dfs(idx+1,sub_lst+[lst[idx]])
+    team_dfs(idx+1,sub_lst)
+
+
+
+# main
+N=int(input())
+lst=[num for num in range(N)]
+arr=[list(map(int,input().split())) for _ in range(N)]
+ans=1e9
+mark=0
+team_dfs(0,[])
+
+
+
