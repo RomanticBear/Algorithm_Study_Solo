@@ -1191,6 +1191,7 @@ lst=sorted(list(map(int,input().split())))
 dfs(0,[])
 '''
 
+
 # 14889 스타트와 링크
 
 '''
@@ -1199,8 +1200,44 @@ dfs(0,[])
 
 '''
 
-def power_dfs():
-    return 
+
+
+def power_dfs(team,sub_lst):
+
+    if len(sub_lst)==2:
+        scr+=arr[sub_lst[0]][sub_lst[1]]
+        return        
+    
+    for num in team:
+        if v[num]:
+            v[num]=False
+            power_dfs(team,sub_lst+[num])
+            v[num]=True
+
+
+
+# team_dfs 고민 포인트
+# 팀 안에 능력치 누계 어떻게 저장할 것 인가 -> 인자로 반환 ,, ? 
+
+# 해결방법
+# dfs를 리턴할 때, 합산 값을 반환하고 그것을 호출 시점에서 누계
+
+def power_dfs(team,sub_lst):
+
+    if len(sub_lst)==2:
+        i,j=sub_lst
+        return arr[i][j]
+    
+    total_scr=0
+    for num in team:
+        if v[num]:
+            v[num]=False
+            total_scr+=power_dfs(team,sub_lst+[num])
+            v[num]=True
+
+    return total_scr
+
+
 
 # team_dfs 고민 포인트 
 # 1~4가 있을 때, (1,2)를 선택한다면 (3,4)를 선택한 것과 같은데 조합이 중복해서 발생함.
@@ -1226,10 +1263,12 @@ def team_dfs(idx,sub_lst):
             teamB=[num for num in lst if num not in sub_lst]
             # print(teamA,'|',teamB)
 
-            P_teamA=power_dfs(teamA)
-            P_teamB=power_dfs(teamB)
+            P_teamA=power_dfs(teamA,[])
+            P_teamB=power_dfs(teamB,[])
+
 
             ans=min(ans,abs(P_teamA-P_teamB))
+
         return
     
     team_dfs(idx+1,sub_lst+[lst[idx]])
@@ -1243,7 +1282,9 @@ lst=[num for num in range(N)]
 arr=[list(map(int,input().split())) for _ in range(N)]
 ans=1e9
 mark=0
+v=[True]*N
 team_dfs(0,[])
+print(ans)
 
 
 
