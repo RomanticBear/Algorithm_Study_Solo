@@ -1282,7 +1282,6 @@ v=[True]*N
 team_dfs(0,[])
 print(ans)
 
-
 '''
 
 
@@ -1337,5 +1336,64 @@ mark=0
 team_dfs(0,[])
 print(ans)
 
+'''
+
+# 15663 N과 M(9)
+# 다른 위치에 있는 같은 수는 다른 수로 봐주돼, 같은 출력은 용납못함.
+
+# 1차 -> 시간 초과 
 
 '''
+N,M=map(int,input().split())
+lst=sorted(list(map(int,input().split())))
+
+check=[] # 출력 배열 저장 
+
+def dfs(sub_lst,use_idx):
+
+    if len(sub_lst)==M:
+        if sub_lst not in check:
+            check.append(sub_lst)
+            print(*sub_lst)
+        return
+       
+    for i in range(len(lst)):
+        if i not in use_idx:
+            use_idx.append(i)
+            dfs(sub_lst+[lst[i]],use_idx)
+            use_idx.pop()
+
+        else:
+            continue
+
+
+dfs([],[])
+
+'''
+
+# 2차: 시간초과 해결
+# 중복 체크리스트 -> set 사용 
+
+N,M=map(int,input().split())
+lst=sorted(list(map(int,input().split())))
+
+ans=set() # 출력 배열 저장 
+
+def dfs(sub_lst,use_idx):
+
+    global ans
+
+    if len(sub_lst)==M:
+        ans.add(tuple(sub_lst)) # 리스트 형태로 집합에 못 넣어서, 튜플로 변환 
+        return
+       
+    for i in range(len(lst)):
+        if i not in use_idx:
+            use_idx.append(i)
+            dfs(sub_lst+[lst[i]],use_idx)
+            use_idx.pop()
+
+dfs([],[])
+
+for row in sorted(ans):
+    print(*row)
