@@ -1,38 +1,50 @@
 
-import sys
-input = sys.stdin.readline
+# team_dfs -> for문 변환 
 
-N = int(input())
-arr = [list(map(int, input().split())) for _ in range(N)]
-ans = 1e9
+def power_dfs(team):
 
+    P_score=0
+    
+    for i in range(len(team)-1):
+        for j in range(i+1,len(team)):
+            P_score+=arr[team[i]][team[j]]+arr[team[j]][team[i]]
 
-# 팀 전력 차 구하기
-def power(t1, t2):
-    p1, p2 = 0, 0
-    for i in range(len(t1)):
-        for j in range(len(t1)):
-            p1 += arr[t1[i]][t1[j]]
-            p2 += arr[t2[i]][t2[j]]
-
-    return abs(p1 - p2)
+    return P_score
 
 
-# 편 가르기
-def dfs(n,A,B):
+def team_dfs(idx,sub_lst):
+
     global ans
 
-    if len(A) == N // 2:
-        if len(A)==len(B):
-            ans=min(ans,power(A,B))
+    # 가지치기 : 현재 뽑은 인원으로, 더 진행해봤자 절반에 해당하는 인원을 채울 수 없는 경우
+    if len(sub_lst)+(len(lst)-idx)<len(lst)//2:
         return
 
-    if n == N:
+    if len(sub_lst)==len(lst)//2 :
+        if mark not in sub_lst:
+            return
+        
+        else:
+            teamA=[num for num in sub_lst]
+            teamB=[num for num in lst if num not in sub_lst]
+            # print(teamA,'|',teamB)
+
+            P_teamA=power_dfs(teamA)
+            P_teamB=power_dfs(teamB)
+
+            ans=min(ans,abs(P_teamA-P_teamB))
+
         return
+    
+    team_dfs(idx+1,sub_lst+[lst[idx]])
+    team_dfs(idx+1,sub_lst)
 
-    dfs(n + 1, A+[n], B)
-    dfs(n + 1, A, B+[n])
 
-
-dfs(0, [], [])
+# main
+N=int(input())
+lst=[num for num in range(N)]
+arr=[list(map(int,input().split())) for _ in range(N)]
+ans=1e9
+mark=0
+team_dfs(0,[])
 print(ans)
