@@ -1374,6 +1374,7 @@ dfs([],[])
 # 2차: 시간초과 해결
 # 중복 체크리스트 -> set 사용 
 
+'''
 N,M=map(int,input().split())
 lst=sorted(list(map(int,input().split())))
 
@@ -1397,3 +1398,81 @@ dfs([],[])
 
 for row in sorted(ans):
     print(*row)
+
+
+'''
+
+
+# 15664 N과 M(10)
+
+'''
+N,M=map(int,input().split())
+lst=sorted(list(map(int,input().split())))
+ans=set()
+
+def dfs(idx,sub_lst):
+    
+    if len(sub_lst)==M:
+        ans.add(tuple(sub_lst))
+        return
+    
+    if idx==N:
+        return
+
+    dfs(idx+1,sub_lst+[lst[idx]])
+    dfs(idx+1,sub_lst)
+
+
+dfs(0,[])
+
+for row in sorted(ans):
+    print(*row)
+
+'''
+
+# 15665 N과 M(11)
+
+'''
+N,M=map(int,input().split())
+lst=sorted(list(map(int,input().split())))
+ans=set()
+
+def dfs(sub_lst):
+    
+    if len(sub_lst)==M:
+        ans.add(tuple(sub_lst))
+        return
+    
+    for num in lst:
+        dfs(sub_lst+[num])
+
+dfs([])
+
+for row in sorted(ans):
+    print(*row)
+
+'''
+
+# 15665 N과 M(12)
+
+'''
+N,M=map(int,input().split())
+lst=sorted(list(map(int,input().split())))
+ans=set()
+
+def dfs(idx,sub_lst):
+    
+    if len(sub_lst)==M:
+        ans.add(tuple(sub_lst))
+        return
+    
+    for i in range(idx,len(lst)):
+        dfs(i,sub_lst+[lst[i]])
+
+
+dfs(0,[])
+
+for row in sorted(ans):
+    print(*row)
+
+'''
