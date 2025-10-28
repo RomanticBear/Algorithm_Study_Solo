@@ -1516,3 +1516,78 @@ print(max_ans)
 print(min_ans)
 
 '''
+
+
+# 하노이탑
+
+'''
+
+# 그림으로 그려보고 이해하기. 
+
+hanoi(첫번째 인자, 두번째 인자, 세번째 인자)
+
+- 첫번째 인자 -> 시작점(start)
+- 두번째 인자 -> 중간 다리 (temp)
+- 세번째 인자 -> 도착점(end)
+
+'''
+
+'''
+def hanoi(n,A,B,C):
+
+    # 가장 작은 원판(n=1)을 이동 시켜야하는 상황이라면, 
+    # 목표한 곳으로 바로 보내면 됨.
+    if n==1:
+        print(f"원판 1을 {A}->{C}로 옮긴다")
+        return
+
+
+    # 위에 판들이 있어서, 못 옮기는 상황
+    # 깔고 있는 판(n-1)들을 temp로 보내버리면 해당 판을 도착점으로 옮길 수 있음. 
+    hanoi(n-1,A,C,B)
+    print(f"원판 {n}을 {A}->{C}로 옮긴다")
+
+
+    # 깔고 있어서 temp로 이동시켰던 판들을, 도착점으로 옮기면 됨.
+    hanoi(n-1,B,A,C)
+
+
+hanoi(3, 'A', 'B', 'C')
+
+'''
+
+
+# 1914 하노이 탑
+
+def hanoi(n,A,B,C):
+    
+    global depth
+    global lst
+
+    if n==1:
+        depth+=1
+        lst.append((A,C))
+        return
+    
+    hanoi(n-1,A,C,B)
+    depth+=1
+    lst.append((A,C)) # n-1 판 해결, n번째 판 이동
+
+    hanoi(n-1,B,A,C) # temp로 이동시킨 n-1판에 대한 이동
+
+
+# main 
+N=int(input())
+depth=0
+lst=[]
+
+
+if N<=20:
+    hanoi(N,1,2,3)
+    print(depth)
+    for start,end in lst:
+        print(start,end)
+else:
+    print((1<<N)-1)
+
+
